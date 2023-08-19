@@ -1,0 +1,9 @@
+{
+  "name": "abg.dependencies",
+  "displayName": "Abg.Dependencies",
+  "version": "0.1.0",
+  "description": "Dependencies",
+  "keywords": [
+  ],
+  "unity": "2019.4"
+}
