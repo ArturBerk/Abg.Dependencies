@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Abg.Dependencies
 {
-    public interface IContainer : IDisposable
+    public interface IContainer : IAsyncDisposable
     {
         bool TryResolve<T>(out T service);
         bool TryResolve(Type type, out object service);

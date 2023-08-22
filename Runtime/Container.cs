@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abg.Dependencies
 {
@@ -37,12 +38,15 @@ namespace Abg.Dependencies
             }
         }
 
-        public void Dispose()
+        public ValueTask DisposeAsync()
         {
             foreach (IDisposable disposable in ResolveAll<IDisposable>())
             {
                 disposable.Dispose();
             }
+
+            return new ValueTask(Task.WhenAll(ResolveAll<IAsyncDisposable>()
+                .Select(a => a.DisposeAsync().AsTask())));
         }
 
         public bool TryResolve<T>(out T service)
@@ -139,7 +143,10 @@ namespace Abg.Dependencies
             public IEnumerable ResolveAll()
             {
                 if (registrations == null)
+                {
                     yield return registration;
+                    yield break;
+                }
 
                 foreach (IRegistration registration1 in registrations)
                 {
