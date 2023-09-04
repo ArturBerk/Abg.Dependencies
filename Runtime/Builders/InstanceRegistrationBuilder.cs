@@ -1,6 +1,8 @@
-﻿namespace Abg.Dependencies
+﻿using System.Collections.Generic;
+
+namespace Abg.Dependencies
 {
-    public class InstanceRegistrationBuilder<T> : RegistrationBuilderBase<T>
+    internal class InstanceRegistrationBuilder<T> : RegistrationBuilderBase<T>
     {
         private readonly T instance;
 
@@ -9,9 +11,9 @@
             this.instance = instance;
         }
 
-        public override IRegistration Build()
+        public override IEnumerable<RegistrationInstance> Build()
         {
-            return new InstanceRegistration<T>(instance, RegisterAs, OnActivateAction, IsAutoActivate);
+            return BuildFrom(new InstanceRegistration<T>(instance, OnActivateAction, IsAutoActivate));
         }
     }
 }

@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Abg.Dependencies
 {
-    public class TypeRegistrationBuilder<T> : RegistrationBuilderBase<T>
+    internal class TypeRegistrationBuilder<T> : RegistrationBuilderBase<T>
     {
         public TypeRegistrationBuilder() : base(typeof(T))
         {
         }
 
-        public override IRegistration Build()
+        public override IEnumerable<RegistrationInstance> Build()
         {
             var activator = new Activator();
-            return IsTransient 
-                ? new TransientFactoryRegistration<T>(activator.Activate, RegisterAs, OnActivateAction)
-                : new SingleFactoryRegistration<T>(activator.Activate, RegisterAs, OnActivateAction,IsAutoActivate);
+            return BuildFrom(IsTransient
+                ? new TransientRegistration<T>(activator.Activate, OnActivateAction)
+                : new SingleRegistration<T>(activator.Activate, OnActivateAction, IsAutoActivate));
         }
 
         private class Activator

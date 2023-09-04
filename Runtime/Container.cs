@@ -11,30 +11,27 @@ namespace Abg.Dependencies
         private readonly IContainer parent;
         private readonly Dictionary<Type, RegistrationList> registrations = new Dictionary<Type, RegistrationList>();
 
-        public Container(IContainer parent, IRegistration[] registrations)
+        public Container(IContainer parent, IReadOnlyCollection<RegistrationInstance> registrations)
         {
             this.parent = parent;
             this.registrations.Add(typeof(IContainer),
                 new RegistrationList(
-                    new InstanceRegistration<IContainer>(this, new TypeCollection(typeof(IContainer)), null, false)));
-            foreach (IRegistration registration in registrations)
+                    new InstanceRegistration<IContainer>(this, null, false)));
+            foreach (RegistrationInstance registration in registrations)
             {
-                foreach (var registerAsType in registration.RegisterAs)
-                {
-                    if (!this.registrations.TryGetValue(registerAsType, out var list))
+                    if (!this.registrations.TryGetValue(registration.Type, out var list))
                     {
-                        list = new RegistrationList(registration);
-                        this.registrations.Add(registerAsType, list);
+                        list = new RegistrationList(registration.Registration);
+                        this.registrations.Add(registration.Type, list);
                         continue;
                     }
 
-                    list.Add(registration);
-                }
+                    list.Add(registration.Registration);
             }
 
-            foreach (IRegistration registration in registrations)
+            foreach (RegistrationInstance registration in registrations)
             {
-                registration.Activate(this);
+                registration.Registration.Activate(this);
             }
         }
 

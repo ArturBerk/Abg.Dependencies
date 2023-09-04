@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Abg.Dependencies
 {
     public interface IRegistrationBuilder
     {
         Type Type { get; }
-        IRegistration Build();
+        IEnumerable<RegistrationInstance> Build();
     }
 
     public interface IRegistrationBuilder<T> : IRegistrationBuilder
@@ -16,5 +17,7 @@ namespace Abg.Dependencies
         IRegistrationBuilder<T> Single();
         IRegistrationBuilder<T> AutoActivate();
         IRegistrationBuilder<T> OnActivated(Action<ResolvedInstance<T>> onActivate);
+        IRegistrationBuilder<T> WithFactory<T1>();
+        IRegistrationBuilder<T> WithFactory();
     }
 }

@@ -2,19 +2,15 @@
 
 namespace Abg.Dependencies
 {
-    public class TransientFactoryRegistration<T> : IRegistration<T>
+    internal class TransientRegistration<T> : IRegistration
     {
         private readonly Func<IContainer, T> factory;
         private readonly Action<ResolvedInstance<T>> onActivate;
 
-        public TypeCollection RegisterAs { get; }
-
-        public TransientFactoryRegistration(Func<IContainer, T> factory, TypeCollection registerAs, 
-            Action<ResolvedInstance<T>> onActivate)
+        public TransientRegistration(Func<IContainer, T> factory, Action<ResolvedInstance<T>> onActivate)
         {
             this.factory = factory;
             this.onActivate = onActivate;
-            RegisterAs = registerAs;
         }
 
         public T Resolve(IContainer container)

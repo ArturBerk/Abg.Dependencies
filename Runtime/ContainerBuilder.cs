@@ -30,10 +30,10 @@ namespace Abg.Dependencies
 
         public IContainer Build(IContainer parent)
         {
-            var registrations = new IRegistration[builders.Count];
+            var registrations = new List<RegistrationInstance>();
             for (int i = 0; i < builders.Count; i++)
             {
-                registrations[i] = builders[i].Build();
+                registrations.AddRange(builders[i].Build());
             }
 
             return new Container(parent, registrations);
@@ -44,12 +44,6 @@ namespace Abg.Dependencies
     {
         object Resolve(IContainer container);
         void Activate(IContainer container);
-        TypeCollection RegisterAs { get; }
-    }
-
-    public interface IRegistration<T> : IRegistration
-    {
-        T Resolve(IContainer container);
     }
 
     public readonly struct ResolvedInstance<T>
@@ -61,6 +55,18 @@ namespace Abg.Dependencies
         {
             Container = container;
             Instance = instance;
+        }
+    }
+
+    public readonly struct RegistrationInstance
+    {
+        public readonly Type Type;
+        public readonly IRegistration Registration;
+
+        public RegistrationInstance(Type type, IRegistration registration)
+        {
+            Type = type;
+            Registration = registration;
         }
     }
 }

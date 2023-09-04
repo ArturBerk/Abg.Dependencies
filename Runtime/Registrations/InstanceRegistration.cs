@@ -2,18 +2,34 @@
 
 namespace Abg.Dependencies
 {
-    public class InstanceRegistration<T> : IRegistration<T>
+    internal class FactoryRegistration<T> : IRegistration
+    {
+        private readonly IRegistration instanceRegistration;
+
+        public FactoryRegistration(IRegistration instanceRegistration)
+        {
+            this.instanceRegistration = instanceRegistration;
+        }
+
+        public object Resolve(IContainer container)
+        {
+            return (Func<T>)(() => (T)instanceRegistration.Resolve(container));
+        }
+
+        public void Activate(IContainer container)
+        {
+        }
+    }
+    
+    internal class InstanceRegistration<T> : IRegistration
     {
         private readonly T instance;
         private readonly bool autoActivate;
-        private Action<ResolvedInstance<T>> onActivate;
+        private readonly Action<ResolvedInstance<T>> onActivate;
 
-        public TypeCollection RegisterAs { get; }
-
-        public InstanceRegistration(T instance, TypeCollection registerAs, Action<ResolvedInstance<T>> onActivate, bool autoActivate)
+        public InstanceRegistration(T instance, Action<ResolvedInstance<T>> onActivate, bool autoActivate)
         {
             this.instance = instance;
-            RegisterAs = registerAs;
             this.autoActivate = autoActivate;
             this.onActivate = onActivate;
         }
@@ -32,6 +48,7 @@ namespace Abg.Dependencies
 
         object IRegistration.Resolve(IContainer container)
         {
+            onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
             return instance;
         }
     }

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Abg.Dependencies
 {
-    public class FactoryRegistrationBuilder<T> : RegistrationBuilderBase<T>
+    internal class FactoryRegistrationBuilder<T> : RegistrationBuilderBase<T>
     {
         private readonly Func<IContainer,T> factory;
 
@@ -11,11 +12,11 @@ namespace Abg.Dependencies
             this.factory = factory;
         }
 
-        public override IRegistration Build()
+        public override IEnumerable<RegistrationInstance> Build()
         {
-            return IsTransient 
-                ? new TransientFactoryRegistration<T>(factory, RegisterAs, OnActivateAction)
-                : new SingleFactoryRegistration<T>(factory, RegisterAs, OnActivateAction,IsAutoActivate);
+            return BuildFrom(IsTransient 
+                ? new TransientRegistration<T>(factory, OnActivateAction)
+                : new SingleRegistration<T>(factory, OnActivateAction,IsAutoActivate));
         }
     }
 }
