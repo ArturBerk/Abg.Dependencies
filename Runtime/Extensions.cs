@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -51,7 +52,16 @@ namespace Abg.Dependencies
                 for (var index = 0; index < parameters.Length; index++)
                 {
                     ParameterInfo parameterInfo = parameters[index];
-                    parameterValues[index] = context.Resolve(parameterInfo.ParameterType);
+                    if (context.TryResolve(parameterInfo.ParameterType, out var service))
+                        parameterValues[index] = service;
+                    else
+                    {
+                        var arg = parameterInfo.GetCustomAttribute<OptionalAttribute>();
+                        if (arg == null)
+                            context.Resolve(parameterInfo.ParameterType); // To throw exception
+                        else
+                            parameterValues[index] = default;
+                    }
                 }
 
                 methodInfo.Invoke(instance, parameterValues);

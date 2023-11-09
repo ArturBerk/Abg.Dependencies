@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Abg.Dependencies
 {
@@ -36,7 +37,17 @@ namespace Abg.Dependencies
                 var resolvedParameters = new object[parameters.Length];
                 for (var index = 0; index < parameters.Length; index++)
                 {
-                    resolvedParameters[index] = container.Resolve(parameters[index].ParameterType);
+                    ParameterInfo parameterInfo = parameters[index];
+                    if (container.TryResolve(parameterInfo.ParameterType, out var service))
+                        resolvedParameters[index] = service;
+                    else
+                    {
+                        var arg = parameterInfo.GetCustomAttribute<OptionalAttribute>();
+                        if (arg == null)
+                            container.Resolve(parameterInfo.ParameterType); // To throw exception
+                        else
+                            resolvedParameters[index] = default;
+                    }
                 }
 
                 return (T)constructor.Invoke(resolvedParameters);
