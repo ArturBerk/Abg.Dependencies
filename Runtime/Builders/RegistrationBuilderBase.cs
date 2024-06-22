@@ -37,6 +37,11 @@ namespace Abg.Dependencies
             Type = type;
             RegisterAs = new TypeCollection(type);
         }
+        
+        IRegistrationBuilder IRegistrationBuilder.WithFactory<T1>()
+        {
+            return WithFactory<T1>();
+        }
 
         public IRegistrationBuilder<T> WithFactory<T1>()
         {
@@ -44,16 +49,31 @@ namespace Abg.Dependencies
             FactoryBuilders.Add(new FactoryBuilder<T1>());
             return this;
         }
+        
+        IRegistrationBuilder IRegistrationBuilder.WithFactory()
+        {
+            return WithFactory();
+        }
 
         public IRegistrationBuilder<T> WithFactory()
         {
             return WithFactory<T>();
+        }
+        
+        IRegistrationBuilder IRegistrationBuilder.As<T1>()
+        {
+            return As<T1>();
         }
 
         public IRegistrationBuilder<T> As<T1>()
         {
             RegisterAs.Add(typeof(T1));
             return this;
+        }
+        
+        IRegistrationBuilder IRegistrationBuilder.As(Type type)
+        {
+            return As(type);
         }
 
         public IRegistrationBuilder<T> As(Type type)
@@ -62,16 +82,31 @@ namespace Abg.Dependencies
             return this;
         }
 
+        IRegistrationBuilder IRegistrationBuilder.Transient()
+        {
+            return Transient();
+        }
+
         public IRegistrationBuilder<T> Transient()
         {
             IsTransient = true;
             return this;
         }
 
+        IRegistrationBuilder IRegistrationBuilder.Single()
+        {
+            return Single();
+        }
+
         public IRegistrationBuilder<T> Single()
         {
             IsTransient = false;
             return this;
+        }
+
+        IRegistrationBuilder IRegistrationBuilder.AutoActivate()
+        {
+            return AutoActivate();
         }
 
         public IRegistrationBuilder<T> AutoActivate()

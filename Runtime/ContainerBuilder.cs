@@ -14,6 +14,14 @@ namespace Abg.Dependencies
             return builder;
         }
 
+        public IRegistrationBuilder RegisterType(Type type)
+        {
+            var builder = (IRegistrationBuilder) Activator.CreateInstance(
+                typeof(TypeRegistrationBuilder<>).MakeGenericType(type));
+            builders.Add(builder);
+            return builder;
+        }
+
         public IRegistrationBuilder<T> RegisterType<T>()
         {
             var builder = new TypeRegistrationBuilder<T>();
