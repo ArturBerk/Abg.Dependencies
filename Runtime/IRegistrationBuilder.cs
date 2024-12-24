@@ -7,25 +7,17 @@ namespace Abg.Dependencies
     {
         Type Type { get; }
         IEnumerable<RegistrationInstance> Build();
-        
-        IRegistrationBuilder As<T1>();
-        IRegistrationBuilder As(Type type);
-        IRegistrationBuilder Transient();
-        IRegistrationBuilder Single();
-        IRegistrationBuilder AutoActivate();
-        IRegistrationBuilder WithFactory<T1>();
-        IRegistrationBuilder WithFactory();
     }
 
     public interface IRegistrationBuilder<T> : IRegistrationBuilder
     {
-        new IRegistrationBuilder<T> As<T1>();
-        new IRegistrationBuilder<T> As(Type type);
-        new IRegistrationBuilder<T> Transient();
-        new IRegistrationBuilder<T> Single();
-        new IRegistrationBuilder<T> AutoActivate();
-        new IRegistrationBuilder<T> OnActivated(Action<ResolvedInstance<T>> onActivate);
-        new IRegistrationBuilder<T> WithFactory<T1>();
-        new IRegistrationBuilder<T> WithFactory();
+        IRegistrationBuilder<T> As<T1>();
+        IRegistrationBuilder<T> As(Type type);
+        IRegistrationBuilder<T> Transient();
+        IRegistrationBuilder<T> Single();
+        IRegistrationBuilder<T> AutoActivate();
+        IRegistrationBuilder<T> OnActivated(Action<ResolvedInstance<T>> onActivate);
+        IRegistrationBuilder<T> WithFactory<T1>();
+        IRegistrationBuilder<T> WithFactory();
     }
 }

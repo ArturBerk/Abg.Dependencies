@@ -9,6 +9,7 @@ namespace Abg.Dependencies
         public InstanceRegistrationBuilder(T instance) : base(instance.GetType())
         {
             this.instance = instance;
+            IsAutoActivate = true;
         }
 
         public override IEnumerable<RegistrationInstance> Build()

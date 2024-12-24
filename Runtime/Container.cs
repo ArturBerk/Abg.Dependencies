@@ -142,7 +142,7 @@ namespace Abg.Dependencies
                 yield return (T)registration.Resolve(this);
             }
             
-            if (includeParent)
+            if (includeParent && parent != null)
             {
                 foreach (var t in parent.ResolveAll<T>(true))
                 {
@@ -166,7 +166,7 @@ namespace Abg.Dependencies
                 yield return registration.Resolve(this);
             }
 
-            if (includeParent)
+            if (includeParent && parent != null)
             {
                 foreach (var t in parent.ResolveAll(type, true))
                 {
