@@ -24,31 +24,21 @@ namespace Abg.Dependencies
     internal class InstanceRegistration<T> : IRegistration
     {
         private readonly T instance;
-        private readonly bool autoActivate;
         private readonly Action<ResolvedInstance<T>> onActivate;
 
-        public InstanceRegistration(T instance, Action<ResolvedInstance<T>> onActivate, bool autoActivate)
+        public InstanceRegistration(T instance, Action<ResolvedInstance<T>> onActivate)
         {
             this.instance = instance;
-            this.autoActivate = autoActivate;
             this.onActivate = onActivate;
-        }
-
-        public T Resolve(IContainer container)
-        {
-            onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
-            return instance;
         }
 
         public void Activate(IContainer container)
         {
-            if (autoActivate)
-                Resolve(container);
+            onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
         }
 
         object IRegistration.Resolve(IContainer container)
         {
-            onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
             return instance;
         }
     }

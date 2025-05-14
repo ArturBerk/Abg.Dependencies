@@ -19,8 +19,11 @@ namespace Abg.Dependencies
 
         public T Resolve(IContainer container)
         {
-            if (instance == null) instance = factory(container);
-            onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
+            if (instance == null)
+            {
+                instance = factory(container);
+                onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
+            }
             return instance;
         }
 

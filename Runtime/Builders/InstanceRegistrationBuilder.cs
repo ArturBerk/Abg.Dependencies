@@ -14,7 +14,7 @@ namespace Abg.Dependencies
 
         public override IEnumerable<RegistrationInstance> Build()
         {
-            return BuildFrom(new InstanceRegistration<T>(instance, OnActivateAction, IsAutoActivate));
+            return BuildFrom(new InstanceRegistration<T>(instance, OnActivateAction));
         }
     }
 }
