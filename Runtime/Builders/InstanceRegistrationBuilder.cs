@@ -6,7 +6,7 @@ namespace Abg.Dependencies
     {
         private readonly T instance;
 
-        public InstanceRegistrationBuilder(T instance) : base(instance.GetType())
+        public InstanceRegistrationBuilder(T instance) : base(typeof(T))
         {
             this.instance = instance;
             IsAutoActivate = true;
@@ -14,7 +14,7 @@ namespace Abg.Dependencies
 
         public override IEnumerable<RegistrationInstance> Build()
         {
-            return BuildFrom(new InstanceRegistration<T>(instance, OnActivateAction));
+            return BuildFrom(new InstanceRegistration<T>(instance, OnActivateAction, IsAutoActivate));
         }
     }
 }

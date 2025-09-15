@@ -16,7 +16,7 @@ namespace Abg.Dependencies
             this.parent = parent;
             this.registrations.Add(typeof(IContainer),
                 new RegistrationList(
-                    new InstanceRegistration<IContainer>(this, null)));
+                    new InstanceRegistration<IContainer>(this, null, false)));
             foreach (RegistrationInstance registration in registrations)
             {
                     if (!this.registrations.TryGetValue(registration.Type, out var list))

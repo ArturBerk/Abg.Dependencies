@@ -65,7 +65,7 @@ namespace Abg.Dependencies
                 }
 
                 methodInfo.Invoke(instance, parameterValues);
-                break;
+                //break;
             }
         }
 
