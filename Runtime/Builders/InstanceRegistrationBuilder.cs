@@ -6,10 +6,12 @@ namespace Abg.Dependencies
     {
         private readonly T instance;
 
-        public InstanceRegistrationBuilder(T instance) : base(typeof(T))
+        public InstanceRegistrationBuilder(T instance) : base(instance.GetType())
         {
             this.instance = instance;
             IsAutoActivate = true;
+            if (instance.GetType() != typeof(T))
+                As<T>();
         }
 
         public override IEnumerable<RegistrationInstance> Build()
