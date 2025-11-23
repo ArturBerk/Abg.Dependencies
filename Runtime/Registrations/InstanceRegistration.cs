@@ -23,6 +23,7 @@ namespace Abg.Dependencies
     
     internal class InstanceRegistration<T> : IRegistration
     {
+        private bool isActivated;
         private readonly T instance;
         private readonly bool autoActivate;
         private readonly Action<ResolvedInstance<T>> onActivate;
@@ -36,7 +37,12 @@ namespace Abg.Dependencies
 
         public T Resolve(IContainer container)
         {
-            onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
+            if (!isActivated)
+            {
+                onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
+                isActivated = true;
+            }
+
             return instance;
         }
 
@@ -48,8 +54,7 @@ namespace Abg.Dependencies
 
         object IRegistration.Resolve(IContainer container)
         {
-            onActivate?.Invoke(new ResolvedInstance<T>(container, instance));
-            return instance;
+            return Resolve(container);
         }
     }
 }
